@@ -10,11 +10,13 @@ import credentials
 if len(sys.argv) != 2:
     print('Usage: cvd.py <course_url>')
     exit(1)
+else:
+    url = sys.argv[1]
 
 
 browser = webdriver.Firefox()
 browser.implicitly_wait(60)
-browser.get(sys.argv[1])
+browser.get(url)
 
 
 # Login
@@ -30,16 +32,29 @@ login.click()
 video_urls = []
 video_names = []
 
-link_objs = browser.find_elements_by_class_name('rc-ItemLink.nostyle')
+while True:
+    try:
+        browser.get(url)
+    except WebDriverException:
+        break
 
-for link in link_objs:
-    link_url  = link.get_attribute("href")
-    link_name = link_url.split('/')[-1]
-    link_type = link_url.split('/')[-3]
+    # Coursera redirects to week1 url if the week number is wrong
+    if browser.current_url != url:
+        break
 
-    if link_type == "lecture":
-        video_urls.append(link_url)
-        video_names.append(link_name)
+    link_objs = browser.find_elements_by_class_name('rc-ItemLink.nostyle')
+
+    for link in link_objs:
+        link_url  = link.get_attribute("href")
+        link_name = link_url.split('/')[-1]
+        link_type = link_url.split('/')[-3]
+
+        if link_type == "lecture":
+            video_urls.append(link_url)
+            video_names.append(link_name)
+
+    next_week = str(int(url.split('/')[-1]) + 1)
+    url = '/'.join(url.split('/')[:-1] + [next_week])
 
 
 # Download videos
