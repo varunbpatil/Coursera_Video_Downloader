@@ -3,6 +3,7 @@
 from selenium import webdriver
 import requests
 import sys
+import credentials
 
 
 # Example course_url - https://www.coursera.org/learn/convolutional-neural-networks/home/week/1
@@ -20,8 +21,8 @@ browser.get(sys.argv[1])
 username = browser.find_element_by_id("emailInput-input")
 password = browser.find_element_by_id("passwordInput-input")
 login    = browser.find_element_by_xpath("//button[contains(@class, 'Button_1fxeab1-o_O-primary_cv02ee-o_O-md_28awn8 w-100')]")
-username.send_keys("...")            # your coursera username here
-password.send_keys("...")            # your coursera password here
+username.send_keys(credentials.login["username"]) # credential.py in the same directory containing
+password.send_keys(credentials.login["password"]) # login = {"username": "...", "password": "..."}
 login.click()
 
 
