@@ -35,7 +35,7 @@ video_names = []
 while True:
     try:
         browser.get(url)
-    except WebDriverException:
+    except:
         break
 
     # Coursera redirects to week1 url if the week number is wrong
